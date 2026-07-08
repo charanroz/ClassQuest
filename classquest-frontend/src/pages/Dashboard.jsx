@@ -83,6 +83,29 @@ function Dashboard() {
                     Attendance History
                 </button>
 
+                <button
+                    onClick={() => navigate("/badges")}
+                    className="mb-6 ml-4 rounded-xl bg-yellow-500 px-4 py-2 font-medium text-white hover:bg-yellow-600"
+                >
+                    Badges
+                </button>
+
+                <button
+                    onClick={() => navigate("/import")}
+                    className="mb-6 ml-4 rounded-xl bg-purple-600 px-4 py-2 font-medium text-white hover:bg-purple-700"
+                >
+                    Import Timetable
+                </button>
+
+                <button
+                    onClick={() => navigate("/leaderboard")}
+                    className="mb-6 ml-4 rounded-xl bg-orange-500 px-4 py-2 font-medium text-white hover:bg-orange-600"
+                >
+                    Leaderboard
+                </button>
+
+
+
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 
                     <StatCard

@@ -3,8 +3,12 @@ package com.charan.classquest.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -16,8 +20,11 @@ public class Student {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private int totalPoints;
     private int currentStreak;
+    @ManyToMany
+    private Set<Badge> badges = new HashSet<>();
 
 
     public Student(){
@@ -73,5 +80,27 @@ public class Student {
 
     }
 
+    public Set<Badge> getBadges() {
+        return badges;
+    }
 
+    public void setBadges(Set<Badge> badges) {
+        this.badges = badges;
+    }
+
+    public int getTotalPoints() {
+        return totalPoints;
+    }
+
+    public void setTotalPoints(int totalPoints) {
+        this.totalPoints = totalPoints;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -25,4 +25,10 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     );
 
     List<Attendance> findByStudentOrderByMarkedAtDesc(Student student);
+
+    long countByStudentAndStatusAndClassSession_StartTimeBefore(
+            Student student,
+            Status status,
+            LocalDateTime now
+    );
 }

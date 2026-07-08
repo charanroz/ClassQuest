@@ -21,11 +21,13 @@ public class AttendanceService {
     private AttendanceRepository attendanceRepository;
     private ClassSessionRepository classSessionRepository;
     private StudentRepository studentRepository;
+    private  BadgeService badgeService;
 
-    public AttendanceService(AttendanceRepository attendanceRepository,ClassSessionRepository classSessionRepository,StudentRepository studentRepository){
+    public AttendanceService(AttendanceRepository attendanceRepository, ClassSessionRepository classSessionRepository, StudentRepository studentRepository, BadgeService badgeService) {
         this.attendanceRepository = attendanceRepository;
         this.classSessionRepository = classSessionRepository;
         this.studentRepository = studentRepository;
+        this.badgeService = badgeService;
     }
 
     public void markAttendance(Long studentId, Long classSessionId, Status status){
@@ -78,6 +80,7 @@ public class AttendanceService {
         attendance.setStatus(status);
         attendance.setMarkedAt(LocalDateTime.now());
         studentRepository.save(student);
+        badgeService.checkAndAwardBadges(student);
         attendanceRepository.save(attendance);
     }
 

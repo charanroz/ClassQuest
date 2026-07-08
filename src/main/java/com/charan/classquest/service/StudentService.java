@@ -1,4 +1,5 @@
 package com.charan.classquest.service;
+
 import com.charan.classquest.dto.StudentLoginRequest;
 import com.charan.classquest.dto.StudentLoginResponse;
 import com.charan.classquest.dto.StudentRequest;
@@ -12,16 +13,16 @@ import java.util.Optional;
 @Service
 public class StudentService {
 
-
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     public StudentService(StudentRepository studentRepository){
         this.studentRepository = studentRepository;
-    };
+    }
 
     public Student createStudent(StudentRequest request){
 
-        Optional<Student> existingStudent = studentRepository.findByEmail(request.getEmail());;
+        Optional<Student> existingStudent =
+                studentRepository.findByEmail(request.getEmail());
 
         if (existingStudent.isPresent()) {
             throw new RuntimeException("A student with this email already exists.");
@@ -31,6 +32,7 @@ public class StudentService {
         student.setFirstName(request.getFirstName());
         student.setLastName(request.getLastName());
         student.setEmail(request.getEmail());
+        student.setPassword(request.getPassword());
         student.setTotalpoints(0);
         student.setCurrentStreak(0);
 
@@ -40,6 +42,10 @@ public class StudentService {
     public StudentLoginResponse login(StudentLoginRequest request) {
         Student student = studentRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new StudentNotFoundException("Student not found"));
+
+        if (!student.getPassword().equals(request.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
 
         return new StudentLoginResponse(
                 student.getId(),

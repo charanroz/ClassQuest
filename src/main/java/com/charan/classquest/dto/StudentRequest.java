@@ -12,6 +12,8 @@ public class StudentRequest {
     @Email
     @NotBlank
     private String email;
+    @NotBlank
+    private String password;
 
     public StudentRequest() {
     }
@@ -40,5 +42,11 @@ public class StudentRequest {
         this.email = email;
     }
 
-    // getters and setters
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -33,4 +33,10 @@ public interface ClassSessionRepository extends JpaRepository<ClassSession, Long
             LocalDateTime start,
             LocalDateTime end
     );
+
+
+    long countByStudentAndStartTimeBefore(
+            Student student,
+            LocalDateTime now
+    );
 }
