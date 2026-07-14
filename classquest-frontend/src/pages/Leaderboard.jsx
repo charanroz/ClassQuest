@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    Flame,
-    Medal,
-    Trophy,
-} from "lucide-react";
-
+import { Flame, Medal } from "lucide-react";
 import { getLeaderboard } from "../services/leaderboardService";
 
 function Leaderboard() {
@@ -12,9 +7,7 @@ function Leaderboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    const currentStudentId = Number(
-        localStorage.getItem("studentId")
-    );
+    const currentStudentId = Number(localStorage.getItem("studentId"));
 
     useEffect(() => {
         async function loadLeaderboard() {
@@ -34,67 +27,60 @@ function Leaderboard() {
     function getRankStyle(index) {
         if (index === 0) {
             return {
-                icon: "text-amber-500",
-                background: "bg-amber-50",
-                label: "1st",
+                icon: "text-amber-400",
+                background: "bg-amber-500/10",
             };
         }
 
         if (index === 1) {
             return {
-                icon: "text-slate-500",
-                background: "bg-slate-100",
-                label: "2nd",
+                icon: "text-slate-300",
+                background: "bg-slate-400/10",
             };
         }
 
         if (index === 2) {
             return {
-                icon: "text-orange-600",
-                background: "bg-orange-50",
-                label: "3rd",
+                icon: "text-orange-400",
+                background: "bg-orange-500/10",
             };
         }
 
         return {
-            icon: "text-indigo-500",
-            background: "bg-indigo-50",
-            label: `${index + 1}th`,
+            icon: "text-violet-400",
+            background: "bg-violet-500/10",
         };
     }
 
     if (loading) {
-        return <p className="text-slate-500">Loading leaderboard...</p>;
+        return <p className="text-slate-400">Loading leaderboard...</p>;
     }
 
     return (
         <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-400">
                     Weekly ranking
                 </p>
 
-                <h1 className="mt-2 text-3xl font-bold text-slate-900">
+                <h1 className="mt-3 text-3xl font-bold text-white">
                     Leaderboard
                 </h1>
 
-                <p className="mt-2 text-slate-500">
+                <p className="mt-2 text-slate-400">
                     Rankings are based on weekly attendance percentage.
                 </p>
             </div>
 
             {error && (
-                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+                <div className="mb-5 rounded-xl border border-red-500/20 bg-red-950/25 p-4 text-red-300">
                     {error}
                 </div>
             )}
 
             {students.length === 0 ? (
-                <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-                    <Trophy className="mx-auto h-10 w-10 text-slate-300" />
-                    <p className="mt-4 text-slate-500">
-                        No leaderboard data available yet.
-                    </p>
+                <div className="rounded-2xl border border-[#262d43] bg-[#111625] p-8 text-center text-slate-400">
+                    No leaderboard data available yet.
                 </div>
             ) : (
                 <div className="space-y-4">
@@ -107,10 +93,10 @@ function Leaderboard() {
                         return (
                             <div
                                 key={student.studentId}
-                                className={`rounded-2xl border p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
+                                className={`rounded-2xl border p-5 shadow-xl shadow-black/10 transition hover:-translate-y-0.5 ${
                                     isCurrentStudent
-                                        ? "border-indigo-300 bg-indigo-50"
-                                        : "border-slate-200 bg-white"
+                                        ? "border-violet-500/40 bg-violet-500/10"
+                                        : "border-[#262d43] bg-[#111625]"
                                 }`}
                             >
                                 <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
@@ -123,7 +109,7 @@ function Leaderboard() {
                                                     className={`h-7 w-7 ${rankStyle.icon}`}
                                                 />
                                             ) : (
-                                                <span className="font-bold text-indigo-600">
+                                                <span className="font-bold text-violet-400">
                                                     {index + 1}
                                                 </span>
                                             )}
@@ -131,25 +117,20 @@ function Leaderboard() {
 
                                         <div>
                                             <div className="flex items-center gap-2">
-                                                <h2 className="text-lg font-bold text-slate-900">
+                                                <h2 className="text-lg font-bold text-white">
                                                     {student.firstName}
                                                 </h2>
 
                                                 {isCurrentStudent && (
-                                                    <span className="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-semibold text-white">
+                                                    <span className="rounded-full bg-violet-600 px-2.5 py-1 text-xs font-semibold text-white">
                                                         You
                                                     </span>
                                                 )}
                                             </div>
 
                                             <p className="mt-1 text-sm text-slate-500">
-                                                {
-                                                    student.attendedThisWeek
-                                                }{" "}
-                                                /{" "}
-                                                {
-                                                    student.totalClassesThisWeek
-                                                }{" "}
+                                                {student.attendedThisWeek} /{" "}
+                                                {student.totalClassesThisWeek}{" "}
                                                 classes attended
                                             </p>
                                         </div>
@@ -157,22 +138,22 @@ function Leaderboard() {
 
                                     <div className="flex items-center justify-between gap-8 sm:justify-end">
                                         <div>
-                                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                                            <p className="text-xs font-medium uppercase tracking-wide text-slate-600">
                                                 Streak
                                             </p>
 
-                                            <p className="mt-1 flex items-center gap-1 font-semibold text-orange-600">
+                                            <p className="mt-1 flex items-center gap-1 font-semibold text-orange-400">
                                                 <Flame className="h-4 w-4" />
                                                 {student.currentStreak}
                                             </p>
                                         </div>
 
                                         <div className="text-right">
-                                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                                            <p className="text-xs font-medium uppercase tracking-wide text-slate-600">
                                                 Attendance
                                             </p>
 
-                                            <p className="mt-1 text-2xl font-bold text-indigo-600">
+                                            <p className="mt-1 text-2xl font-bold text-violet-400">
                                                 {Number(
                                                     student.weeklyAttendancePercentage
                                                 ).toFixed(1)}

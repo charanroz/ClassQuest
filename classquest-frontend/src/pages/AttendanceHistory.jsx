@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, MapPin, CheckCircle, XCircle } from "lucide-react";
-import { getAttendanceHistory } from "../services/attendanceHistoryService";
+import { Clock, MapPin } from "lucide-react";
+import { getTodayClasses } from "../services/classSessionService";
+import { markAttendance } from "../services/attendanceService";
 
-function AttendanceHistory() {
-    const [history, setHistory] = useState([]);
+function TodayClasses() {
+    const [classes, setClasses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("success");
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function loadHistory() {
+        async function loadClasses() {
             const studentId = localStorage.getItem("studentId");
 
             if (!studentId) {
@@ -20,119 +22,128 @@ function AttendanceHistory() {
             }
 
             try {
-                const data = await getAttendanceHistory(studentId);
-                setHistory(data);
+                const data = await getTodayClasses(studentId);
+                setClasses(data);
             } catch {
-                setMessage("Failed to load attendance history.");
+                setMessageType("error");
+                setMessage("Failed to load today's classes.");
             } finally {
                 setLoading(false);
             }
         }
 
-        loadHistory();
+        loadClasses();
     }, [navigate]);
+
+    async function handleMarkPresent(classSessionId) {
+        const studentId = localStorage.getItem("studentId");
+
+        try {
+            await markAttendance(studentId, classSessionId, "PRESENT");
+            setMessageType("success");
+            setMessage("Attendance marked successfully. You earned 10 XP.");
+        } catch {
+            setMessageType("error");
+            setMessage(
+                "You can only mark present within 15 minutes of the class start."
+            );
+        }
+    }
 
     if (loading) {
         return (
-            <p className="p-6 text-slate-600">
-                Loading attendance history...
+            <p className="mx-auto max-w-5xl text-slate-400">
+                Loading today's classes...
             </p>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 p-6">
-            <div className="mx-auto max-w-4xl">
-                <div className="mb-6 flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold text-slate-900">
-                            Attendance History
-                        </h1>
-                        <p className="mt-2 text-slate-500">
-                            Review your marked attendance records.
-                        </p>
-                    </div>
+        <div className="mx-auto max-w-5xl">
+            <div className="mb-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-400">
+                    Attendance
+                </p>
 
-                    <button
-                        onClick={() => navigate("/dashboard")}
-                        className="rounded-xl bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm"
-                    >
-                        Dashboard
-                    </button>
+                <h1 className="mt-3 text-3xl font-bold text-white">
+                    Today's Classes
+                </h1>
+
+                <p className="mt-2 text-slate-400">
+                    Mark your attendance and keep your streak going.
+                </p>
+            </div>
+
+            {message && (
+                <div
+                    className={`mb-5 rounded-xl border p-4 text-sm ${
+                        messageType === "success"
+                            ? "border-emerald-500/20 bg-emerald-950/25 text-emerald-300"
+                            : "border-red-500/20 bg-red-950/25 text-red-300"
+                    }`}
+                >
+                    {message}
                 </div>
+            )}
 
-                {message && (
-                    <div className="mb-4 rounded-xl bg-red-50 p-4 text-red-700">
-                        {message}
-                    </div>
-                )}
+            {classes.length === 0 ? (
+                <div className="rounded-2xl border border-[#262d43] bg-[#111625] p-8 text-slate-400">
+                    No classes scheduled for today.
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    {classes.map((classSession) => (
+                        <div
+                            key={classSession.id}
+                            className="rounded-2xl border border-[#262d43] bg-[#111625] p-6 shadow-xl shadow-black/10 transition hover:border-violet-500/30"
+                        >
+                            <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
+                                <div>
+                                    <p className="text-sm font-medium text-violet-400">
+                                        {classSession.sessionType}
+                                    </p>
 
-                {history.length === 0 ? (
-                    <div className="rounded-2xl bg-white p-6 text-slate-600 shadow-sm">
-                        No attendance records yet.
-                    </div>
-                ) : (
-                    <div className="space-y-4">
-                        {history.map((item) => (
-                            <div
-                                key={item.attendanceId}
-                                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-                            >
-                                <div className="flex items-start justify-between gap-4">
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            {item.status === "PRESENT" ? (
-                                                <CheckCircle className="h-5 w-5 text-green-600" />
-                                            ) : (
-                                                <XCircle className="h-5 w-5 text-red-600" />
-                                            )}
+                                    <h2 className="mt-2 text-xl font-bold text-white">
+                                        {classSession.title}
+                                    </h2>
 
-                                            <span
-                                                className={
-                                                    item.status === "PRESENT"
-                                                        ? "font-semibold text-green-700"
-                                                        : "font-semibold text-red-700"
-                                                }
-                                            >
-                                                {item.status}
-                                            </span>
-                                        </div>
+                                    <div className="mt-4 space-y-3 text-sm text-slate-400">
+                                        <p className="flex items-center gap-2">
+                                            <Clock className="h-4 w-4 text-violet-400" />
 
-                                        <h2 className="mt-3 text-xl font-bold text-slate-900">
-                                            {item.title}
-                                        </h2>
-
-                                        <p className="mt-1 text-sm text-indigo-600">
-                                            {item.sessionType}
+                                            {new Date(
+                                                classSession.startTime
+                                            ).toLocaleTimeString([], {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            })}
                                         </p>
 
-                                        <div className="mt-3 space-y-2 text-slate-600">
-                                            <p className="flex items-center gap-2">
-                                                <Clock className="h-4 w-4" />
-                                                Class:{" "}
-                                                {new Date(item.startTime).toLocaleString()}
-                                            </p>
+                                        <p className="flex items-center gap-2">
+                                            <MapPin className="h-4 w-4 text-violet-400" />
 
-                                            <p className="flex items-center gap-2">
-                                                <Clock className="h-4 w-4" />
-                                                Marked:{" "}
-                                                {new Date(item.markedAt).toLocaleString()}
-                                            </p>
-
-                                            <p className="flex items-center gap-2">
-                                                <MapPin className="h-4 w-4" />
-                                                {item.location || "Location not available"}
-                                            </p>
-                                        </div>
+                                            {classSession.location ||
+                                                "Location not available"}
+                                        </p>
                                     </div>
                                 </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        handleMarkPresent(classSession.id)
+                                    }
+                                    className="rounded-xl bg-violet-600 px-5 py-2.5 font-medium text-white transition hover:bg-violet-500"
+                                >
+                                    Mark Present
+                                </button>
                             </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
 
-export default AttendanceHistory;
+export default TodayClasses;

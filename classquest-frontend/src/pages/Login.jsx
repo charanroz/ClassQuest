@@ -1,111 +1,133 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../api/api";
+import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout";
+import "../components/Auth.css";
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-
     const navigate = useNavigate();
 
-    async function handleLogin(e) {
-        e.preventDefault();
-        setError("");
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    function handleChange(event) {
+        const { name, value } = event.target;
+
+        setFormData((previousData) => ({
+            ...previousData,
+            [name]: value,
+        }));
+
+        setMessage("");
+    }
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        if (!formData.email.trim() || !formData.password.trim()) {
+            setMessage("Please enter your email and password.");
+            return;
+        }
 
         try {
-            const response = await api.post("/login", {
-                email,
-                password,
-            });
+            setIsLoading(true);
+            setMessage("");
 
-            localStorage.setItem(
-                "studentId",
-                response.data.studentId
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/students/login`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                }
             );
 
-            localStorage.setItem(
-                "firstName",
-                response.data.firstName
-            );
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Email or password is incorrect.");
+            }
+
+            localStorage.setItem("studentId", data.studentId);
+            localStorage.setItem("firstName", data.firstName);
 
             navigate("/dashboard");
-
-        } catch (err) {
-
-            setError("Invalid email or password");
-
+        } catch (error) {
+            setMessage(error.message || "Unable to log in. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
+        <AuthLayout
+            title="Welcome back"
+            description="Sign in to continue your attendance journey."
+        >
+            <form className="auth-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="email">Email address</label>
 
-        <div className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="name@newcastle.ac.uk"
+                        value={formData.email}
+                        onChange={handleChange}
+                        autoComplete="email"
+                    />
+                </div>
 
-            <form
-                onSubmit={handleLogin}
-                className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg"
-            >
+                <div className="form-group">
+                    <div className="password-label-row">
+                        <label htmlFor="password">Password</label>
+                    </div>
 
-                <h1 className="text-3xl font-bold text-slate-900">
-                    🎓 ClassQuest
-                </h1>
+                    <div className="password-input-wrapper">
+                        <input
+                            id="password"
+                            name="password"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            autoComplete="current-password"
+                        />
 
-                <p className="mt-2 text-slate-500">
-                    Login to continue your attendance journey.
-                </p>
+                        <button
+                            type="button"
+                            className="password-toggle"
+                            onClick={() => setShowPassword((previous) => !previous)}
+                        >
+                            {showPassword ? "Hide" : "Show"}
+                        </button>
+                    </div>
+                </div>
 
-
-                <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="mt-6 w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-indigo-600"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-
-
-                <input
-                    type="password"
-                    placeholder="Enter your password"
-                    className="mt-4 w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-indigo-600"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-
+                {message && <p className="form-message error-message">{message}</p>}
 
                 <button
                     type="submit"
-                    className="mt-4 w-full rounded-xl bg-indigo-600 p-3 font-medium text-white hover:bg-indigo-700"
+                    className="primary-auth-button"
+                    disabled={isLoading}
                 >
-                    Login
+                    {isLoading ? "Signing in..." : "Sign in"}
                 </button>
 
-
-                <button
-                    type="button"
-                    onClick={() => navigate("/signup")}
-                    className="mt-4 w-full rounded-xl border border-indigo-600 p-3 font-medium text-indigo-600 hover:bg-indigo-50"
-                >
-                    Create New Account
-                </button>
-
-
-                {error && (
-                    <p className="mt-4 text-sm text-red-600">
-                        {error}
-                    </p>
-                )}
-
-
+                <p className="auth-switch-text">
+                    New to ClassQuest? <Link to="/signup">Create an account</Link>
+                </p>
             </form>
-
-        </div>
-
+        </AuthLayout>
     );
-
 }
 
 export default Login;

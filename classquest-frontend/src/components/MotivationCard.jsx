@@ -1,5 +1,3 @@
-import { Sparkles } from "lucide-react";
-
 function MotivationCard({
                             currentStreak,
                             attendedThisWeek,
@@ -15,21 +13,21 @@ function MotivationCard({
             attendedThisWeek === totalClassesThisWeek &&
             totalClassesThisWeek > 0
         ) {
-            return "Perfect week so far! You have attended every scheduled class.";
+            return "Perfect week so far. You have attended every scheduled class.";
         }
 
         if (currentStreak >= 5) {
-            return `Amazing work — you are currently on a ${currentStreak}-class streak!`;
+            return `Great work. You are currently on a ${currentStreak}-class streak.`;
         }
 
         if (currentStreak > 0) {
-            return `You are on a ${currentStreak}-class streak. Keep the momentum going!`;
+            return `You are on a ${currentStreak}-class streak. Keep the momentum going.`;
         }
 
         const remaining = totalClassesThisWeek - attendedThisWeek;
 
         if (remaining === 1) {
-            return "Only one class remains this week. Finish strongly!";
+            return "Only one class remains this week. Finish strongly.";
         }
 
         if (totalPoints >= 100) {
@@ -40,22 +38,14 @@ function MotivationCard({
     }
 
     return (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-blue-100 bg-blue-50 p-6 shadow-sm">
-            <div className="flex items-start gap-4">
-                <div className="rounded-xl bg-white p-3 text-blue-600 shadow-sm">
-                    <Sparkles className="h-6 w-6" />
-                </div>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-950/45 to-indigo-950/30 p-6 shadow-xl shadow-black/10">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-400">
+                Your progress
+            </p>
 
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
-                        Your motivation
-                    </p>
-
-                    <p className="mt-2 text-lg font-semibold text-slate-900">
-                        {getMessage()}
-                    </p>
-                </div>
-            </div>
+            <p className="mt-3 max-w-4xl text-lg font-semibold leading-7 text-slate-100">
+                {getMessage()}
+            </p>
         </div>
     );
 }

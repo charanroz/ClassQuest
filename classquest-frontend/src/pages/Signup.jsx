@@ -1,66 +1,209 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../api/api";
+import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout";
+import "../components/Auth.css";
 
 function Signup() {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-
     const navigate = useNavigate();
 
-    async function handleSignup(e) {
-        e.preventDefault();
-        setError("");
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    function handleChange(event) {
+        const { name, value } = event.target;
+
+        setFormData((previousData) => ({
+            ...previousData,
+            [name]: value,
+        }));
+
+        setMessage("");
+    }
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        const {
+            firstName,
+            lastName,
+            email,
+            password,
+            confirmPassword,
+        } = formData;
+
+        if (
+            !firstName.trim() ||
+            !lastName.trim() ||
+            !email.trim() ||
+            !password.trim() ||
+            !confirmPassword.trim()
+        ) {
+            setMessage("Please complete all fields.");
+            return;
+        }
+
+        if (password.length < 8) {
+            setMessage("Your password must contain at least 8 characters.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setMessage("The passwords do not match.");
+            return;
+        }
 
         try {
-            const response = await api.post("/students", {
-                firstName,
-                lastName,
-                email,
-                password,
-            });
+            setIsLoading(true);
+            setMessage("");
 
-            localStorage.setItem("studentId", response.data.id);
-            localStorage.setItem("firstName", response.data.firstName);
-
-            navigate("/dashboard");
-        } catch (err) {
-            console.error("Signup error:", err.response?.data || err.message);
-
-            setError(
-                typeof err.response?.data === "string"
-                    ? err.response.data
-                    : err.response?.data?.message ||
-                    `Signup failed (${err.response?.status || "network error"})`
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/students`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        email,
+                        password,
+                    }),
+                }
             );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Unable to create your account.");
+            }
+
+            navigate("/login", {
+                state: {
+                    message: "Account created successfully. You can now sign in.",
+                },
+            });
+        } catch (error) {
+            setMessage(
+                error.message || "Unable to create your account. Please try again."
+            );
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
-            <form onSubmit={handleSignup} className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-                <h1 className="text-3xl font-bold text-slate-900">🎓 ClassQuest</h1>
-                <p className="mt-2 text-slate-500">Create your account and start tracking attendance.</p>
+        <AuthLayout
+            title="Create your account"
+            description="Start tracking your classes and building your attendance streak."
+        >
+            <form className="auth-form" onSubmit={handleSubmit}>
+                <div className="form-name-row">
+                    <div className="form-group">
+                        <label htmlFor="firstName">First name</label>
 
-                <input className="mt-6 w-full rounded-xl border p-3" placeholder="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
-                <input className="mt-4 w-full rounded-xl border p-3" placeholder="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-                <input type="email" className="mt-4 w-full rounded-xl border p-3" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <input type="password" className="mt-4 w-full rounded-xl border p-3" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        <input
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            placeholder="Charan"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            autoComplete="given-name"
+                        />
+                    </div>
 
-                <button className="mt-4 w-full rounded-xl bg-indigo-600 p-3 font-medium text-white">
-                    Sign Up
+                    <div className="form-group">
+                        <label htmlFor="lastName">Last name</label>
+
+                        <input
+                            id="lastName"
+                            name="lastName"
+                            type="text"
+                            placeholder="Anandharaj"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            autoComplete="family-name"
+                        />
+                    </div>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="email">University email</label>
+
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="name@newcastle.ac.uk"
+                        value={formData.email}
+                        onChange={handleChange}
+                        autoComplete="email"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="password">Password</label>
+
+                    <div className="password-input-wrapper">
+                        <input
+                            id="password"
+                            name="password"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="At least 8 characters"
+                            value={formData.password}
+                            onChange={handleChange}
+                            autoComplete="new-password"
+                        />
+
+                        <button
+                            type="button"
+                            className="password-toggle"
+                            onClick={() => setShowPassword((previous) => !previous)}
+                        >
+                            {showPassword ? "Hide" : "Show"}
+                        </button>
+                    </div>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="confirmPassword">Confirm password</label>
+
+                    <input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter the password again"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        autoComplete="new-password"
+                    />
+                </div>
+
+                {message && <p className="form-message error-message">{message}</p>}
+
+                <button
+                    type="submit"
+                    className="primary-auth-button"
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Creating account..." : "Create account"}
                 </button>
 
-                <button type="button" onClick={() => navigate("/")} className="mt-3 w-full text-sm text-indigo-600">
-                    Already have an account? Login
-                </button>
-
-                {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+                <p className="auth-switch-text">
+                    Already have an account? <Link to="/login">Sign in</Link>
+                </p>
             </form>
-        </div>
+        </AuthLayout>
     );
 }
 

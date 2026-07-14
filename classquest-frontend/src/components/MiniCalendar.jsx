@@ -1,5 +1,3 @@
-import { CalendarDays } from "lucide-react";
-
 function MiniCalendar({ classes = [] }) {
     const today = new Date();
 
@@ -36,21 +34,15 @@ function MiniCalendar({ classes = [] }) {
     }
 
     return (
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-indigo-50 p-3 text-indigo-600">
-                    <CalendarDays className="h-6 w-6" />
-                </div>
+        <div className="mt-6 rounded-2xl border border-[#262d43] bg-[#111625] p-6 shadow-xl shadow-black/10">
+            <div>
+                <h2 className="text-lg font-bold text-white">
+                    This week
+                </h2>
 
-                <div>
-                    <h2 className="text-lg font-bold text-slate-900">
-                        This week
-                    </h2>
-
-                    <p className="text-sm text-slate-500">
-                        Your classes at a glance
-                    </p>
-                </div>
+                <p className="mt-1 text-sm text-slate-500">
+                    Your classes at a glance
+                </p>
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
@@ -63,15 +55,15 @@ function MiniCalendar({ classes = [] }) {
                             key={date.toISOString()}
                             className={`min-h-32 rounded-xl border p-3 ${
                                 todayDate
-                                    ? "border-indigo-300 bg-indigo-50"
-                                    : "border-slate-200 bg-slate-50"
+                                    ? "border-violet-500/50 bg-violet-500/10"
+                                    : "border-[#293047] bg-[#171c2d]"
                             }`}
                         >
                             <p
                                 className={`text-xs font-semibold uppercase ${
                                     todayDate
-                                        ? "text-indigo-600"
-                                        : "text-slate-400"
+                                        ? "text-violet-400"
+                                        : "text-slate-500"
                                 }`}
                             >
                                 {date.toLocaleDateString([], {
@@ -79,7 +71,7 @@ function MiniCalendar({ classes = [] }) {
                                 })}
                             </p>
 
-                            <p className="mt-1 text-xl font-bold text-slate-900">
+                            <p className="mt-1 text-xl font-bold text-white">
                                 {date.getDate()}
                             </p>
 
@@ -87,13 +79,13 @@ function MiniCalendar({ classes = [] }) {
                                 {dayClasses.slice(0, 2).map((classSession) => (
                                     <div
                                         key={classSession.id}
-                                        className="rounded-lg bg-white p-2 shadow-sm"
+                                        className="rounded-lg border border-[#303750] bg-[#0f1423] p-2"
                                     >
-                                        <p className="truncate text-xs font-semibold text-slate-700">
+                                        <p className="truncate text-xs font-semibold text-slate-200">
                                             {classSession.title}
                                         </p>
 
-                                        <p className="mt-1 text-xs text-indigo-600">
+                                        <p className="mt-1 text-xs text-violet-400">
                                             {new Date(
                                                 classSession.startTime
                                             ).toLocaleTimeString([], {
@@ -105,13 +97,13 @@ function MiniCalendar({ classes = [] }) {
                                 ))}
 
                                 {dayClasses.length > 2 && (
-                                    <p className="text-xs font-medium text-slate-500">
+                                    <p className="text-xs font-medium text-slate-400">
                                         +{dayClasses.length - 2} more
                                     </p>
                                 )}
 
                                 {dayClasses.length === 0 && (
-                                    <p className="text-xs text-slate-400">
+                                    <p className="text-xs text-slate-600">
                                         No classes
                                     </p>
                                 )}

@@ -46,12 +46,12 @@ function Dashboard() {
         return (
             <div className="mx-auto max-w-6xl">
                 <div className="animate-pulse space-y-6">
-                    <div className="h-24 rounded-2xl bg-slate-200" />
+                    <div className="h-24 rounded-2xl bg-[#171c2d]" />
 
                     <div className="grid gap-5 md:grid-cols-3">
-                        <div className="h-44 rounded-2xl bg-slate-200" />
-                        <div className="h-44 rounded-2xl bg-slate-200" />
-                        <div className="h-44 rounded-2xl bg-slate-200" />
+                        <div className="h-44 rounded-2xl bg-[#171c2d]" />
+                        <div className="h-44 rounded-2xl bg-[#171c2d]" />
+                        <div className="h-44 rounded-2xl bg-[#171c2d]" />
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@ function Dashboard() {
 
     if (error) {
         return (
-            <div className="mx-auto max-w-6xl rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">
+            <div className="mx-auto max-w-6xl rounded-2xl border border-red-500/20 bg-red-950/25 p-6 text-red-300">
                 {error}
             </div>
         );
@@ -69,16 +69,16 @@ function Dashboard() {
     return (
         <div className="mx-auto max-w-6xl">
             <div className="mb-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-600">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-400">
                     Overview
                 </p>
 
-                <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+                <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                     Welcome back,{" "}
                     {localStorage.getItem("firstName") || "Student"}
                 </h1>
 
-                <p className="mt-3 max-w-2xl text-slate-500">
+                <p className="mt-3 max-w-2xl text-slate-400">
                     Track your progress, maintain your streak and work towards
                     your weekly attendance goals.
                 </p>
@@ -134,10 +134,9 @@ function Dashboard() {
                 totalPoints={dashboard.totalPoints}
             />
 
-            <footer className="mt-12 border-t border-slate-200 py-6 text-center text-sm text-slate-500">
+            <footer className="mt-12 border-t border-[#242a40] py-6 text-center text-sm text-slate-600">
                 © 2026 ClassQuest • Developed by Charan Anandharaj
             </footer>
-
         </div>
     );
 }

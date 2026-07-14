@@ -1,28 +1,28 @@
-function StatCard({ title, value, icon, tone = "indigo", subtitle }) {
+function StatCard({ title, value, icon, tone = "violet", subtitle }) {
     const styles = {
         orange: {
-            icon: "bg-amber-50 text-amber-600",
-            border: "hover:border-amber-200",
+            icon: "bg-orange-500/10 text-orange-400",
+            border: "hover:border-orange-500/30",
         },
         amber: {
-            icon: "bg-violet-50 text-violet-600",
-            border: "hover:border-violet-200",
+            icon: "bg-violet-500/10 text-violet-400",
+            border: "hover:border-violet-500/30",
         },
         blue: {
-            icon: "bg-blue-50 text-blue-600",
-            border: "hover:border-blue-200",
+            icon: "bg-blue-500/10 text-blue-400",
+            border: "hover:border-blue-500/30",
         },
-        indigo: {
-            icon: "bg-slate-100 text-slate-700",
-            border: "hover:border-slate-300",
+        violet: {
+            icon: "bg-violet-500/10 text-violet-400",
+            border: "hover:border-violet-500/30",
         },
     };
 
-    const selectedStyle = styles[tone] || styles.indigo;
+    const selectedStyle = styles[tone] || styles.violet;
 
     return (
         <div
-            className={`rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md ${selectedStyle.border}`}
+            className={`rounded-2xl border border-[#262d43] bg-[#111625] p-6 shadow-xl shadow-black/10 transition duration-200 hover:-translate-y-1 hover:bg-[#141a2b] ${selectedStyle.border}`}
         >
             <div
                 className={`flex h-12 w-12 items-center justify-center rounded-xl ${selectedStyle.icon}`}
@@ -30,16 +30,16 @@ function StatCard({ title, value, icon, tone = "indigo", subtitle }) {
                 {icon}
             </div>
 
-            <p className="mt-5 text-sm font-medium text-slate-500">
+            <p className="mt-5 text-sm font-medium text-slate-400">
                 {title}
             </p>
 
-            <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+            <p className="mt-2 text-3xl font-bold tracking-tight text-white">
                 {value}
             </p>
 
             {subtitle && (
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-slate-500">
                     {subtitle}
                 </p>
             )}
