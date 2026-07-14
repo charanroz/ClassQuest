@@ -5,7 +5,6 @@ import com.charan.classquest.service.TimetableImportService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 public class TimetableImportController {
 
     private final TimetableImportService timetableImportService;
