@@ -27,8 +27,15 @@ function Signup() {
             localStorage.setItem("firstName", response.data.firstName);
 
             navigate("/dashboard");
-        } catch {
-            setError("Signup failed. Email may already exist.");
+        } catch (err) {
+            console.error("Signup error:", err.response?.data || err.message);
+
+            setError(
+                typeof err.response?.data === "string"
+                    ? err.response.data
+                    : err.response?.data?.message ||
+                    `Signup failed (${err.response?.status || "network error"})`
+            );
         }
     }
 
