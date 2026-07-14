@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ClassSessionRepository extends JpaRepository<ClassSession, Long> {
 
-    Optional<ClassSession> findByStudentAndModuleAndStartTime(
+    List<ClassSession> findByStudentAndModuleAndStartTime(
             Student student,
             Module module,
             LocalDateTime startTime

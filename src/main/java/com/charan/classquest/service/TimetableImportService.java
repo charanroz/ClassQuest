@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -171,14 +172,14 @@ public class TimetableImportService {
                 module = moduleRepository.save(newModule);
             }
 
-            Optional<ClassSession> existingClassSession =
+            List<ClassSession> existingSessions =
                     classSessionRepository.findByStudentAndModuleAndStartTime(
                             student,
                             module,
                             startDateTime
                     );
 
-            if (existingClassSession.isPresent()) {
+            if (!existingSessions.isEmpty()) {
                 continue;
             }
 
