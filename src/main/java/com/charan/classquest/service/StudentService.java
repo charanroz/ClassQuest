@@ -19,19 +19,23 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public Student createStudent(StudentRequest request){
+    public Student createStudent(StudentRequest request) {
+
+        String email = request.getEmail().trim();
 
         Optional<Student> existingStudent =
-                studentRepository.findByEmail(request.getEmail());
+                studentRepository.findByEmail(email);
 
         if (existingStudent.isPresent()) {
-            throw new RuntimeException("A student with this email already exists.");
+            throw new RuntimeException(
+                    "A student with this email already exists."
+            );
         }
 
         Student student = new Student();
-        student.setFirstName(request.getFirstName());
-        student.setLastName(request.getLastName());
-        student.setEmail(request.getEmail());
+        student.setFirstName(request.getFirstName().trim());
+        student.setLastName(request.getLastName().trim());
+        student.setEmail(email);
         student.setPassword(request.getPassword());
         student.setTotalpoints(0);
         student.setCurrentStreak(0);
@@ -40,12 +44,23 @@ public class StudentService {
     }
 
     public StudentLoginResponse login(StudentLoginRequest request) {
+
+        System.out.println("========== LOGIN DEBUG ==========");
+        System.out.println("Received email: " + request.getEmail());
+        System.out.println("Received password: " + request.getPassword());
+
         Student student = studentRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new StudentNotFoundException("Student not found"));
 
+        System.out.println("Database email: " + student.getEmail());
+        System.out.println("Database password: " + student.getPassword());
+
         if (!student.getPassword().equals(request.getPassword())) {
+            System.out.println("Password does not match!");
             throw new RuntimeException("Invalid password");
         }
+
+        System.out.println("Login successful!");
 
         return new StudentLoginResponse(
                 student.getId(),

@@ -25,8 +25,10 @@ public class StudentController {
         return studentService.createStudent(request);
     }
 
-    @PostMapping("/login")
-    public StudentLoginResponse login(@Valid @RequestBody StudentLoginRequest request) {
+    @PostMapping("/students/login")
+    public StudentLoginResponse login(
+            @Valid @RequestBody StudentLoginRequest request
+    ) {
         return studentService.login(request);
     }
 }

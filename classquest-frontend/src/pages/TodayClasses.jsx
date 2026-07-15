@@ -61,7 +61,7 @@ function TodayClasses() {
     return (
         <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-400">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-400">
                     Attendance
                 </p>
 
@@ -133,7 +133,7 @@ function TodayClasses() {
                                     onClick={() =>
                                         handleMarkPresent(classSession.id)
                                     }
-                                    className="rounded-xl bg-violet-600 px-5 py-2.5 font-medium text-white transition hover:bg-violet-500"
+                                    className="rounded-xl bg-indigo-600 px-5 py-2.5 font-medium text-white transition hover:bg-indigo-500"
                                 >
                                     Mark Present
                                 </button>

@@ -1,12 +1,13 @@
 package com.charan.classquest.service;
 
+import com.charan.classquest.dto.BadgeResponse;
 import com.charan.classquest.entity.Badge;
 import com.charan.classquest.entity.Student;
+import com.charan.classquest.exception.StudentNotFoundException;
 import com.charan.classquest.repository.BadgeRepository;
 import com.charan.classquest.repository.StudentRepository;
 import org.springframework.stereotype.Service;
-import com.charan.classquest.dto.BadgeResponse;
-import com.charan.classquest.exception.StudentNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,12 +17,15 @@ public class BadgeService {
     private final BadgeRepository badgeRepository;
     private final StudentRepository studentRepository;
 
-    public BadgeService(BadgeRepository badgeRepository,
-                        StudentRepository studentRepository) {
+    public BadgeService(
+            BadgeRepository badgeRepository,
+            StudentRepository studentRepository
+    ) {
         this.badgeRepository = badgeRepository;
         this.studentRepository = studentRepository;
     }
 
+    @Transactional
     public void checkAndAwardBadges(Student student) {
 
         if (student.getTotalpoints() >= 10) {
@@ -41,7 +45,11 @@ public class BadgeService {
         }
     }
 
-    private void awardBadge(Student student, String badgeName, String description) {
+    private void awardBadge(
+            Student student,
+            String badgeName,
+            String description
+    ) {
 
         boolean alreadyHasBadge = student.getBadges()
                 .stream()
@@ -56,6 +64,7 @@ public class BadgeService {
                     Badge newBadge = new Badge();
                     newBadge.setName(badgeName);
                     newBadge.setDescription(description);
+
                     return badgeRepository.save(newBadge);
                 });
 
@@ -63,10 +72,13 @@ public class BadgeService {
         studentRepository.save(student);
     }
 
+    @Transactional(readOnly = true)
     public List<BadgeResponse> getStudentBadges(Long studentId) {
 
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
+                .orElseThrow(() ->
+                        new StudentNotFoundException("Student not found")
+                );
 
         return student.getBadges()
                 .stream()

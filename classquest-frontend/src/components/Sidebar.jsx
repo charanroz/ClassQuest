@@ -65,7 +65,7 @@ function Sidebar({ isOpen, onClose }) {
                 className={({ isActive }) =>
                     `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
                         isActive
-                            ? "bg-violet-600 text-white shadow-lg shadow-violet-950/30"
+                            ? "bg-indigo-600 text-white shadow-lg shadow-violet-950/30"
                             : "text-slate-400 hover:bg-[#1a1f32] hover:text-slate-100"
                     }`
                 }
