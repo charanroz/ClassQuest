@@ -1,41 +1,64 @@
 # ClassQuest
 
-ClassQuest is a fullstack web application I built to help students keep track of their classes and attendance. Students can import their university timetable using an ICS/WebCal link, view upcoming classes, mark attendance, and monitor their attendance through a simple dashboard.
+ClassQuest is a full-stack web application that I built as part of my MSc Computer Science project. It helps students keep track of their classes and attendance in one place.
+
+Students can import their university timetable using an ICS/WebCal link, view upcoming classes, mark attendance, track their attendance progress, and earn badges for completing attendance goals.
+
+## Live Demo
+
+https://class-quest-two.vercel.app
 
 ## Features
 
-- Student registration
-- Student login
-- Import timetable using an ICS/WebCal link
-- Dashboard with attendance statistics
+- Create a student account
+- Login to the application
+- Import university timetable using an ICS/WebCal link
 - View today's classes
-- Weekly timetable
+- View weekly timetable
 - Mark attendance
-- Attendance history
+- View attendance history
+- Track attendance streaks
+- Earn achievement badges
+- View attendance leaderboard
 
 ## Technologies Used
 
 ### Backend
+
 - Java
 - Spring Boot
 - Spring Data JPA
 - MySQL
 
 ### Frontend
+
 - React
 - Vite
-- Axios
 - Tailwind CSS
+- Axios
 
-## Running the project
+### Deployment
 
-### Backend
+- Frontend - Vercel
+- Backend - Render
+- Database - Aiven MySQL
+
+## Running the Project
+
+Clone the repository
+
+```bash
+git clone https://github.com/charanroz/ClassQuest.git
+cd ClassQuest
+```
+
+Run the backend
 
 ```bash
 mvn spring-boot:run
 ```
 
-### Frontend
+Run the frontend
 
 ```bash
 cd classquest-frontend
@@ -43,27 +66,31 @@ npm install
 npm run dev
 ```
 
-## What I learned
+## What I Learned
 
-While building this project I learned how to:
+Building ClassQuest helped me improve my understanding of full-stack development. During this project I learned how to:
 
 - Build REST APIs using Spring Boot
-- Design a relational database using JPA
+- Design databases with JPA and MySQL
 - Connect a React frontend with a Spring Boot backend
-- Import and process ICS timetable files
-- Handle validation and exceptions
-- Build a complete full-stack application from scratch
+- Process ICS timetable files
+- Deploy a full-stack application using Render and Vercel
+- Build a project from planning to deployment
 
 ## Future Improvements
 
-There are still a few features I would like to add in the future:
+Some features I would like to add in the future are:
 
 - JWT authentication
-- Leaderboard
-- Achievements and badges
-- Student profile
+- QR code attendance
 - Lecturer/Admin portal
+- Email reminders
+- Attendance analytics
 
 ## Author
 
-Charan Anandharaj
+**Charan Anandharaj**
+
+GitHub: https://github.com/charanroz
+
+LinkedIn: https://www.linkedin.com/in/charanroz
